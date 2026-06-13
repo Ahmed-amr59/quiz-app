@@ -177,12 +177,19 @@ class _QuizHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            AppStrings.appTitle,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontSize: 32),
+          Row(
+            spacing: 8,
+            children: [
+              Image.asset("assets/icons/app1.png", width: 50, height: 50),
+              Text(
+                AppStrings.appTitle,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontSize: 32),
+              ),
+            ],
           ),
+
           const SizedBox(height: 6),
           Text(
             AppStrings.quizSubtitle,

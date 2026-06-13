@@ -83,7 +83,7 @@ class ResultScreen extends StatelessWidget {
                                           .textTheme
                                           .headlineMedium
                                           ?.copyWith(
-                                            color: Colors.white,
+                                      
                                             fontWeight: FontWeight.w700,
                                           ),
                                     ),

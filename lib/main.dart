@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
+import 'core/widgets/splash_screen.dart';
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'features/quiz/data/question_repository.dart';
 import 'features/quiz/presentation/cubit/quiz_cubit.dart';
@@ -62,30 +63,37 @@ class AppLauncher extends StatefulWidget {
 class _AppLauncherState extends State<AppLauncher> {
   static const _seenOnboardingKey = 'seen_onboarding';
 
-  bool _loaded = false;
+  bool _initialized = false;
   bool _showOnboarding = false;
 
   @override
   void initState() {
     super.initState();
-    _loadOnboardingState();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await Future.wait([
+      _loadOnboardingState(),
+      Future.delayed(const Duration(milliseconds: 900)),
+    ]);
+
+    if (!mounted) return;
+    setState(() {
+      _initialized = true;
+    });
   }
 
   Future<void> _loadOnboardingState() async {
     final prefs = await SharedPreferences.getInstance();
     final seenOnboarding = prefs.getBool(_seenOnboardingKey) ?? false;
-
-    if (!mounted) return;
-    setState(() {
-      _loaded = true;
-      _showOnboarding = !seenOnboarding;
-    });
+    _showOnboarding = !seenOnboarding;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (!_initialized) {
+      return const SplashScreen();
     }
 
     return _showOnboarding ? const OnboardingScreen() : const QuizScreen();
